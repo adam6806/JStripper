@@ -1,190 +1,84 @@
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.logging.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+
+import static java.lang.System.currentTimeMillis;
 
 /**
  * Created by Adam on 8/26/2016.
+ * Code Stripper for PPL
  */
 public class CodeStripper {
 
     private Logger logger;
-    private boolean lastFwdSlash;
-    private boolean lastBackSlash;
-    private boolean lastQuote;
-    private boolean lastStar;
-    private boolean currLineComment;
-    private boolean currBlockComment;
-    private boolean currQuote;
-    private boolean currCharLiteral;
-    private boolean overrideAppend;
-    private ArrayList<String> inputFile;
-    private ArrayList<String> outputFile;
-    private String inputFileName;
+    private ArrayList<File> inputFiles;
+    private Level level;
+    private String inputFile;
 
-    public CodeStripper(String fileName) {
-        setupLogger();
-        logger.setLevel(Level.INFO);
-        setCharFlagsFalse();
-        currLineComment = false;
-        currBlockComment = false;
-        currQuote = false;
-        currCharLiteral = false;
-        inputFile = new ArrayList();
-        outputFile = new ArrayList();
-        inputFileName = fileName;
+    public CodeStripper(String inputFile) {
+        this(inputFile, "info");
     }
 
-    public CodeStripper(String filename, String logLevel) {
-        this(filename);
+    public CodeStripper(String inputFile, String logLevel) {
         logLevel = StringUtils.lowerCase(logLevel);
         switch(logLevel) {
             case "severe":
-                logger.setLevel(Level.SEVERE);
+                level = Level.SEVERE;
                 break;
             case "fine":
-                logger.setLevel(Level.FINE);
+                level = Level.FINE;
                 break;
             default:
-                logger.setLevel(Level.INFO);
+                level = Level.INFO;
         }
+        setupLogger();
+        logger.setLevel(level);
+        this.inputFile = inputFile;
     }
 
-    public void run() {
-        logger.info("Running...");
-        System.out.println("Processing file " + inputFileName + "...");
-        readInputFile(inputFileName);
-        logger.info("Parsing file...");
-        for (String line : inputFile) {
-            parseLine(line);
+    public ArrayList<File> run() {
+        System.out.println("Preparing to strip...");
+        long startTime = currentTimeMillis();
+        getFiles(inputFile);
+        System.out.println("Stripping " + inputFiles.size() + " files...");
+        ExecutorService executor = Executors.newCachedThreadPool();
+        for (File file : inputFiles) {
+            logger.info("Starting thread for " + file.getName());
+            StripperThread thread = new StripperThread(file, level);
+            executor.execute(thread);
         }
-        logger.info("Parsing file complete.");
-        writeOutputFile();
-        System.out.println("Processing file complete. Output file is in the output directory. See log for details.");
+        executor.shutdown();
+        // Wait until all threads are finish
+        while (!executor.isTerminated()) {
+        }
+        long stopTime = System.currentTimeMillis();
+        logger.info("All threads complete!");
+        System.out.println("Stripping complete! Elapsed time: " + (stopTime - startTime) / 1000.0 + " seconds");
+        return inputFiles;
     }
 
-    private void readInputFile(String fileName) {
-        logger.info("Reading input file " + fileName + "...");
-        try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
-            inputFile = stream.collect(Collectors.toCollection(ArrayList::new));
-        } catch (IOException e) {
-            logger.severe(ExceptionUtils.getStackTrace(e));
-            System.out.println("An error occured while reading the input file. Please see log for details.");
-        }
-        logger.info("Reading input file complete.");
-    }
-
-    private void parseLine(String line) {
-        logger.fine("Parsing next line...");
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < line.length(); i++) {
-            char c = line.charAt(i);
-            logger.fine("Char: " + c);
-            evaluateChar(c, stringBuilder);
-
-            if(currLineComment == false && currBlockComment == false && overrideAppend == false) {
-                stringBuilder.append(c);
-            }
-
-            setCharFlagsFalse();
-            parseChar(c);
-        }
-        currLineComment = false;
-        currQuote = false;
-        currCharLiteral = false;
-        setCharFlagsFalse();
-        String newLine = stringBuilder.append("\n").toString();
-        if (StringUtils.isNotBlank(newLine)) {
-            outputFile.add(newLine);
-        }
-    }
-
-    private void evaluateChar(char c, StringBuilder stringBuilder) {
-        if (c == '/') {
-            if(lastFwdSlash && !currQuote && !currCharLiteral) {
-                logger.fine("Inline comment start");
-                currLineComment = true;
-                deleteLastChar(stringBuilder);
-            } else if (lastStar && currBlockComment) {
-                logger.fine("Block comment end");
-                currBlockComment = false;
-                overrideAppend = true;
-            }
-        } else if (c == '"') {
-            if(!lastBackSlash && !currLineComment && !currBlockComment) {
-                currQuote = !currQuote;
-                logger.fine("Quotation toggled to " + currQuote);
-            }
-        } else if (c == '*') {
-            if(lastFwdSlash && !currLineComment && !currQuote && !currCharLiteral) {
-                if(!currBlockComment) {
-                    logger.fine("Block comment start");
-                    currBlockComment = true;
-                    deleteLastChar(stringBuilder);
+    private void getFiles(String inputFile) {
+        logger.info("Getting files in " + inputFile + " for processing.");
+        inputFiles = new ArrayList();
+        File inputFileObj = new File(inputFile);
+        if (inputFileObj.isDirectory()) {
+            File[] listOfFiles = inputFileObj.listFiles();
+            for (int i = 0; i < listOfFiles.length; i++) {
+                if (listOfFiles[i].isFile()) {
+                    inputFiles.add(listOfFiles[i]);
                 }
             }
-        } else if (c == '\'') {
-            if(!currQuote && !currLineComment && !currBlockComment) {
-                currCharLiteral = !currCharLiteral;
-                logger.fine("Char literal toggled to " + currCharLiteral);
-            }
+        } else {
+            inputFiles.add(inputFileObj);
         }
-    }
-
-    private void deleteLastChar(StringBuilder sb) {
-        if (sb.length() > 0) {
-            sb.setLength(sb.length() - 1);
-        }
-    }
-
-    private void setCharFlagsFalse() {
-        lastFwdSlash = false;
-        lastBackSlash = false;
-        lastQuote = false;
-        lastStar = false;
-        overrideAppend = false;
-    }
-
-    private void parseChar(char c) {
-        switch (c) {
-            case '\\':
-                lastBackSlash = true;
-                break;
-            case '/':
-                lastFwdSlash = true;
-                break;
-            case '"':
-                lastQuote = true;
-                break;
-            case '*':
-                lastStar = true;
-        }
-    }
-
-    private void writeOutputFile() {
-        logger.info("Writing output file...");
-        try {
-            if(outputFile.size() > 0) {
-                String lastLine = outputFile.get(outputFile.size() - 1);
-                String substring = lastLine.substring(0, lastLine.length() - 1);
-                outputFile.set(outputFile.size() - 1, substring);
-            }
-
-            String outputFileName = inputFileName.replace("in", "out");
-            FileUtils.writeLines(new File("./output/" + outputFileName), "UTF-8", outputFile, "");
-        } catch (IOException e) {
-            logger.severe(ExceptionUtils.getStackTrace(e));
-            System.out.println("An error occured while writing the output file. Please see log for details.");
-        }
-        logger.info("Writing output file complete.");
     }
 
     private void setupLogger() {
@@ -194,11 +88,11 @@ public class CodeStripper {
         try {
             File file = new File(".\\logs\\");
             if (!file.exists()) {
-                if(file.mkdirs() == false) {
+                if (!file.mkdirs()) {
                     throw new IOException("Error occured creating log directory!");
                 }
             }
-            fh = new FileHandler(".\\logs\\Log.txt");
+            fh = new FileHandler(".\\logs\\MainLog.txt");
             logger.addHandler(fh);
             SimpleFormatter formatter = new SimpleFormatter();
             fh.setFormatter(formatter);
@@ -209,18 +103,5 @@ public class CodeStripper {
         }
 
         logger.info("Initializing...");
-    }
-
-    @Override
-    public String toString() {
-        return "CodeStripper{" +
-                "lastFwdSlash=" + lastFwdSlash +
-                ", lastBackSlash=" + lastBackSlash +
-                ", lastQuote=" + lastQuote +
-                ", lastStar=" + lastStar +
-                ", currQuote=" + currQuote +
-                ", currLineComment=" + currLineComment +
-                ", currBlockComment=" + currBlockComment +
-                '}';
     }
 }
