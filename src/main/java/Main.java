@@ -1,5 +1,6 @@
 /**
  * Created by Adam on 8/26/2016.
+ * Main class for running CodeStripper
  */
 public final class Main {
 

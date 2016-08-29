@@ -61,7 +61,7 @@ public class CodeStripper {
         }
         long stopTime = System.currentTimeMillis();
         logger.info("All threads complete!");
-        System.out.println("Stripping complete! Elapsed time: " + (stopTime - startTime) / 1000.0 + " seconds");
+        System.out.println("Stripping complete! Stripped files are in the output directory. See logs directory for details. Elapsed time: " + (stopTime - startTime) / 1000.0 + " seconds");
         return inputFiles;
     }
 

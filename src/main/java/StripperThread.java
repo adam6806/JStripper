@@ -16,6 +16,7 @@ import java.util.stream.Stream;
 
 /**
  * Created by Adam on 8/29/2016.
+ * Runnable class for stripping individual files
  */
 public class StripperThread implements Runnable {
 
@@ -35,7 +36,7 @@ public class StripperThread implements Runnable {
     public StripperThread(File file, Level logLevel) {
         this.file = file;
         setupLogger();
-        setLogLevel(logLevel);
+        logger.setLevel(logLevel);
         setCharFlagsFalse();
         currLineComment = false;
         currBlockComment = false;
@@ -43,10 +44,6 @@ public class StripperThread implements Runnable {
         currCharLiteral = false;
         inputFile = new ArrayList<>();
         outputFile = new ArrayList<>();
-    }
-
-    public void setLogLevel(Level logLevel) {
-        logger.setLevel(logLevel);
     }
 
     @Override
@@ -59,7 +56,7 @@ public class StripperThread implements Runnable {
             inputFile.forEach(this::parseLine);
             logger.info("Parsing file complete.");
             writeOutputFile();
-            System.out.println("Processing file " + file.getName() + " complete. Output file is in the output directory. See log for details in the logs directory.");
+            System.out.println("Processing file " + file.getName() + " complete.");
         } catch (Exception e) {
             System.out.println("An error occurred processing file " + file.getName() + ". See logs for details.");
             logger.severe(ExceptionUtils.getStackTrace(e));
