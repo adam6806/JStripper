@@ -1,0 +1,4 @@
+comment with text // here's the comment
+// line with it's own inline comment
+plain text
+no blocks and no blanks

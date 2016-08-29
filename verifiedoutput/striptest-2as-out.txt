@@ -1,0 +1,4 @@
+striptest 2
+only text
+no blank lines
+no comments

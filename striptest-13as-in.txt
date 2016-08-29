@@ -1,0 +1,26 @@
+not in a comment // this is a comment
+not a comment
+also not
+
+last was blank line
+
+last was line with whitespace
+	block comment next
+/*some stuff
+line in block comment
+        blank line in block comment
+etc
+*/
+         block comment ended
+"// comment in string" should not be removed
+"/* block comment in string should not be removed"
+*/ end block comment without beginning shouldn't do anything
+"\"this qoute is escaped and should not close the string so following should be gone"  //this should be gone
+char test = '/*'; this should not count as the start of a block comment
+therefore this should still be present
+if i start a block comment and dont end it there should be nothing left after this /*
+extra lines
+
+extra lines
+extra lines
+      

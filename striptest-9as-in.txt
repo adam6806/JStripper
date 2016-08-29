@@ -1,0 +1,11 @@
+/* several
+block
+comments
+*/
+/*
+
+*/
+/*     */
+/*
+no
+additional text */

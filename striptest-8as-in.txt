@@ -1,0 +1,6 @@
+/* one block comment
+several
+lines
+of
+text
+no addition text*/

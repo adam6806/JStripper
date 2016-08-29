@@ -1,0 +1,3 @@
+comment with text 
+plain text
+no blocks and no blanks

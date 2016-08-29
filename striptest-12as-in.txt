@@ -1,0 +1,10 @@
+/* one line block comment */
+/* multi
+line
+comment
+block */
+text with following block comment /* here
+is
+a
+block*/
+some plain text
