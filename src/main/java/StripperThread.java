@@ -1,4 +1,5 @@
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -160,7 +161,9 @@ public class StripperThread implements Runnable {
                 outputFile.set(outputFile.size() - 1, substring);
             }
 
-            String outputFileName = file.getName().replace("in", "out");
+            String extension = "." + FilenameUtils.getExtension(file.getName());
+            String outputFileName = StringUtils.removeEnd(file.getName(), extension);
+            outputFileName = outputFileName + "-out" + extension;
             File newFile = new File(".\\output\\" + outputFileName);
             FileUtils.writeLines(newFile, "UTF-8", outputFile, "");
         } catch (IOException e) {

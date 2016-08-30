@@ -25,7 +25,7 @@ public class CodeStripperTest {
         ArrayList<File> files = stripper.run();
         for (File inputFile : files) {
             if (inputFile.getName().endsWith(".txt")) {
-                String outputFileName = inputFile.getName().replace("in", "out");
+                String outputFileName = inputFile.getName();
                 File outputFile = new File(".\\output\\" + outputFileName);
                 File verifiedOutputFile = new File(".\\verifiedoutput\\" + outputFileName);
                 boolean areEqual = FileUtils.contentEquals(verifiedOutputFile, outputFile);

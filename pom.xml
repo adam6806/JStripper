@@ -64,16 +64,6 @@
                 </configuration>
             </plugin>
         </plugins>
-
-        <resources>
-            <resource>
-                <directory>${project.basedir}\res</directory><!-- from -->
-                <targetPath>${project.build.directory}</targetPath><!-- to -->
-                <includes><!-- what -->
-                    <include>test-in.txt</include>
-                </includes>
-            </resource>
-        </resources>
     </build>
 
 </project>
