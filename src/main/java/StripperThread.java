@@ -160,7 +160,6 @@ public class StripperThread implements Runnable {
                 String substring = lastLine.substring(0, lastLine.length() - 1);
                 outputFile.set(outputFile.size() - 1, substring);
             }
-
             String extension = "." + FilenameUtils.getExtension(file.getName());
             String outputFileName = StringUtils.removeEnd(file.getName(), extension);
             outputFileName = outputFileName + "-out" + extension;
