@@ -1,4 +1,4 @@
-# CodeStripper
+# JStripper
 
 School project for stripping line comments, multi-line comments, and empty lines from Java code files.
 
