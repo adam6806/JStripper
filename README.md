@@ -5,9 +5,10 @@ School project for stripping line comments, multi-line comments, and empty lines
 ## Use
 
 Run java -jar with executable jar file.
-
+<pre>
  -h,--help             prints this message
  -i,--input <arg>      the directory or file to process
  -l,--loglevel <arg>   the log level to use, valid options are "info",
                        "fine", and "severe"
  -o,--output <arg>     the directory to put processed files in
+</pre>
