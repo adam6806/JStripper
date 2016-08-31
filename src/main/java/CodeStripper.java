@@ -55,9 +55,10 @@ public class CodeStripper {
         // Wait until all threads are finish
         long waitTime = startTime;
         while (!executor.isTerminated()) {
-            if (System.currentTimeMillis() - waitTime > 500) {
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - waitTime > 500) {
                 System.out.println("Processing...");
-                waitTime = System.currentTimeMillis();
+                waitTime = currentTime;
             }
         }
         long stopTime = System.currentTimeMillis();

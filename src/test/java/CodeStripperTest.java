@@ -1,6 +1,4 @@
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
 import java.io.File;
@@ -28,12 +26,10 @@ public class CodeStripperTest {
         ArrayList<File> files = stripper.run();
         for (File inputFile : files) {
             if (inputFile.getName().endsWith(".txt")) {
-                String inputFileExtension = "." + FilenameUtils.getExtension(inputFile.getName());
-                String inputFileName = inputFile.getName();
-                inputFileName = StringUtils.removeEnd(inputFileName, inputFileExtension);
-                String outputFileName = inputFileName + "-out" + inputFileExtension;
+                String outputFileName = inputFile.getName().replace("in", "in-out");
                 File outputFile = new File(".\\output\\" + outputFileName);
-                File verifiedOutputFile = new File(".\\verifiedoutput\\" + outputFileName);
+                String verifiedOutputFileName = inputFile.getName().replace("in", "out");
+                File verifiedOutputFile = new File(".\\verifiedoutput\\" + verifiedOutputFileName);
                 boolean areEqual = FileUtils.contentEquals(verifiedOutputFile, outputFile);
                 assertTrue("Output file did not match for " + outputFileName, areEqual);
             }
