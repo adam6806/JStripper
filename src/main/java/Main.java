@@ -13,6 +13,9 @@ public final class Main {
     private Main() {
     }
 
+    /**
+     * @param args Arguments passed
+     */
     public static void main(String[] args) {
 
         Options options = createOptions();

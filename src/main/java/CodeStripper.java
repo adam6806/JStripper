@@ -16,15 +16,21 @@ import java.util.logging.SimpleFormatter;
  */
 public class CodeStripper {
 
+    private static final long WAIT_TIME = 500;
+    private static final double MS_CONVERSION = 1000.0;
     private Logger logger;
     private ArrayList<File> inputFiles;
     private Level level;
     private String inputFile;
     private String outputPath;
 
+    /**
+     * @param inputFile  Input file or directory to strip
+     * @param outputPath Output path to write all stripped files to
+     * @param logLevel   Log level to use for logger
+     */
     public CodeStripper(String inputFile, String outputPath, String logLevel) {
-        logLevel = StringUtils.lowerCase(logLevel);
-        switch(logLevel) {
+        switch (StringUtils.lowerCase(logLevel)) {
             case "severe":
                 level = Level.SEVERE;
                 break;
@@ -40,7 +46,10 @@ public class CodeStripper {
         this.outputPath = outputPath;
     }
 
-    public ArrayList<File> run() {
+    /**
+     * @return the list of input files being processed
+     */
+    public final ArrayList<File> run() {
         System.out.println("Preparing to strip...");
         long startTime = System.currentTimeMillis();
         getFiles(inputFile);
@@ -56,14 +65,14 @@ public class CodeStripper {
         long waitTime = startTime;
         while (!executor.isTerminated()) {
             long currentTime = System.currentTimeMillis();
-            if (currentTime - waitTime > 500) {
+            if ((currentTime - waitTime) > WAIT_TIME) {
                 System.out.println("Processing...");
                 waitTime = currentTime;
             }
         }
         long stopTime = System.currentTimeMillis();
         logger.info("All threads complete!");
-        System.out.println("Stripping complete! Stripped files are in the output directory. See logs directory for details. Elapsed time: " + (stopTime - startTime) / 1000.0 + " seconds");
+        System.out.println("Stripping complete! Stripped files are in the output directory. See logs directory for details. Elapsed time: " + (stopTime - startTime) / MS_CONVERSION + " seconds");
         return inputFiles;
     }
 

@@ -34,6 +34,11 @@ public class StripperThread implements Runnable {
     private ArrayList<String> outputFile;
     private File file;
 
+    /**
+     * @param file       the file to be processed
+     * @param logLevel   the log level to be used for the logger
+     * @param outputPath the output path to write the processed file to
+     */
     public StripperThread(File file, Level logLevel, String outputPath) {
         this.file = file;
         setupLogger();
@@ -48,6 +53,9 @@ public class StripperThread implements Runnable {
         this.outputPath = outputPath;
     }
 
+    /**
+     * Runs the stripper thread
+     */
     @Override
     public void run() {
         logger.info("Running...");
