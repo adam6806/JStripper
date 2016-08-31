@@ -1,10 +1,10 @@
-package com.github.adam6806.codestripper;
+package com.github.adam6806.jstripper;
 
 import org.apache.commons.cli.*;
 
 /**
  * Created by Adam on 8/26/2016.
- * Main class for running CodeStripper
+ * Main class for running JStripper
  */
 public final class Main {
 
@@ -31,7 +31,7 @@ public final class Main {
             CommandLine line = parser.parse(options, args);
 
             if (line.hasOption('h') || line.hasOption("help")) {
-                formatter.printHelp("CodeStripper", options);
+                formatter.printHelp("JStripper", options);
                 System.exit(0);
             }
             inputPath = line.getOptionValue('i', inputPath);
@@ -40,7 +40,7 @@ public final class Main {
             outputPath = line.getOptionValue("output", outputPath);
             logLevel = line.getOptionValue('l', logLevel);
             logLevel = line.getOptionValue("loglevel", logLevel);
-            CodeStripper stripper = new CodeStripper(inputPath, outputPath, logLevel);
+            JStripper stripper = new JStripper(inputPath, outputPath, logLevel);
             stripper.run();
         } catch (ParseException exp) {
             System.out.println("Unexpected exception:" + exp.getMessage());

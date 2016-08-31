@@ -1,4 +1,4 @@
-package com.github.adam6806.codestripper;
+package com.github.adam6806.jstripper;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Rule;
@@ -12,9 +12,9 @@ import static org.hamcrest.CoreMatchers.equalTo;
 
 /**
  * Created by Adam on 8/27/2016.
- * CodeStripper test for testing that output files match verified output files
+ * JStripper test for testing that output files match verified output files
  */
-public class CodeStripperTest {
+public class JStripperTest {
 
     @Rule
     public final ErrorCollector collector = new ErrorCollector();
@@ -29,7 +29,7 @@ public class CodeStripperTest {
         if (logs.exists()) {
             FileUtils.deleteDirectory(logs);
         }
-        CodeStripper stripper = new CodeStripper(".\\input\\", ".\\output\\", "fine");
+        JStripper stripper = new JStripper(".\\input\\", ".\\output\\", "fine");
         ArrayList<File> files = stripper.run();
         for (File inputFile : files) {
             if (inputFile.getName().endsWith(".txt")) {

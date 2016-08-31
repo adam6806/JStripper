@@ -1,4 +1,4 @@
-package com.github.adam6806.codestripper;
+package com.github.adam6806.jstripper;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -16,7 +16,7 @@ import java.util.logging.SimpleFormatter;
  * Created by Adam on 8/26/2016.
  * Code Stripper for PPL
  */
-public class CodeStripper {
+public class JStripper {
 
     private static final long WAIT_TIME = 500;
     private static final double MS_CONVERSION = 1000.0;
@@ -31,7 +31,7 @@ public class CodeStripper {
      * @param outputPath Output path to write all stripped files to
      * @param logLevel   Log level to use for logger
      */
-    public CodeStripper(String inputFile, String outputPath, String logLevel) {
+    public JStripper(String inputFile, String outputPath, String logLevel) {
         switch (StringUtils.lowerCase(logLevel)) {
             case "severe":
                 level = Level.SEVERE;
@@ -97,7 +97,7 @@ public class CodeStripper {
     }
 
     private void setupLogger() {
-        logger = Logger.getLogger(CodeStripper.class.getName());
+        logger = Logger.getLogger(JStripper.class.getName());
         FileHandler fh;
 
         try {
