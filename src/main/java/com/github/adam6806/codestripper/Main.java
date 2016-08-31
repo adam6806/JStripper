@@ -1,3 +1,5 @@
+package com.github.adam6806.codestripper;
+
 import org.apache.commons.cli.*;
 
 /**

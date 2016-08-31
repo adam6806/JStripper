@@ -1,3 +1,5 @@
+package com.github.adam6806.codestripper;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -20,8 +22,10 @@ import java.util.stream.Stream;
  */
 public class StripperThread implements Runnable {
 
+    private final String outputPath;
+    private final ArrayList<String> outputFile;
+    private final File file;
     private Logger logger;
-    private String outputPath;
     private boolean lastFwdSlash;
     private boolean lastBackSlash;
     private boolean lastStar;
@@ -31,8 +35,6 @@ public class StripperThread implements Runnable {
     private boolean currCharLiteral;
     private boolean overrideAppend;
     private ArrayList<String> inputFile;
-    private ArrayList<String> outputFile;
-    private File file;
 
     /**
      * @param file       the file to be processed

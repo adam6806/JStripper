@@ -1,3 +1,5 @@
+package com.github.adam6806.codestripper;
+
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
@@ -18,11 +20,11 @@ public class CodeStripper {
 
     private static final long WAIT_TIME = 500;
     private static final double MS_CONVERSION = 1000.0;
+    private final Level level;
+    private final String inputFile;
+    private final String outputPath;
     private Logger logger;
     private ArrayList<File> inputFiles;
-    private Level level;
-    private String inputFile;
-    private String outputPath;
 
     /**
      * @param inputFile  Input file or directory to strip

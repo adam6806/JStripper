@@ -1,3 +1,5 @@
+package com.github.adam6806.codestripper;
+
 import org.apache.commons.io.FileUtils;
 import org.junit.Rule;
 import org.junit.Test;
@@ -15,7 +17,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 public class CodeStripperTest {
 
     @Rule
-    public ErrorCollector collector = new ErrorCollector();
+    public final ErrorCollector collector = new ErrorCollector();
 
     @Test
     public void run() throws Exception {
