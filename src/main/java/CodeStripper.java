@@ -10,8 +10,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import static java.lang.System.currentTimeMillis;
-
 /**
  * Created by Adam on 8/26/2016.
  * Code Stripper for PPL
@@ -22,12 +20,9 @@ public class CodeStripper {
     private ArrayList<File> inputFiles;
     private Level level;
     private String inputFile;
+    private String outputPath;
 
-    public CodeStripper(String inputFile) {
-        this(inputFile, "info");
-    }
-
-    public CodeStripper(String inputFile, String logLevel) {
+    public CodeStripper(String inputFile, String outputPath, String logLevel) {
         logLevel = StringUtils.lowerCase(logLevel);
         switch(logLevel) {
             case "severe":
@@ -42,22 +37,28 @@ public class CodeStripper {
         setupLogger();
         logger.setLevel(level);
         this.inputFile = inputFile;
+        this.outputPath = outputPath;
     }
 
     public ArrayList<File> run() {
         System.out.println("Preparing to strip...");
-        long startTime = currentTimeMillis();
+        long startTime = System.currentTimeMillis();
         getFiles(inputFile);
         System.out.println("Stripping " + inputFiles.size() + " files...");
         ExecutorService executor = Executors.newCachedThreadPool();
         for (File file : inputFiles) {
             logger.info("Starting thread for " + file.getName());
-            StripperThread thread = new StripperThread(file, level);
+            StripperThread thread = new StripperThread(file, level, outputPath);
             executor.execute(thread);
         }
         executor.shutdown();
         // Wait until all threads are finish
+        long waitTime = startTime;
         while (!executor.isTerminated()) {
+            if (System.currentTimeMillis() - waitTime > 500) {
+                System.out.println("Processing...");
+                waitTime = System.currentTimeMillis();
+            }
         }
         long stopTime = System.currentTimeMillis();
         logger.info("All threads complete!");
@@ -67,13 +68,15 @@ public class CodeStripper {
 
     private void getFiles(String inputFile) {
         logger.info("Getting files in " + inputFile + " for processing.");
-        inputFiles = new ArrayList();
+        inputFiles = new ArrayList<>();
         File inputFileObj = new File(inputFile);
         if (inputFileObj.isDirectory()) {
             File[] listOfFiles = inputFileObj.listFiles();
-            for (int i = 0; i < listOfFiles.length; i++) {
-                if (listOfFiles[i].isFile()) {
-                    inputFiles.add(listOfFiles[i]);
+            if (listOfFiles != null) {
+                for (File file : listOfFiles) {
+                    if (file.isFile()) {
+                        inputFiles.add(file);
+                    }
                 }
             }
         } else {

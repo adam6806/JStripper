@@ -22,6 +22,7 @@ import java.util.stream.Stream;
 public class StripperThread implements Runnable {
 
     private Logger logger;
+    private String outputPath;
     private boolean lastFwdSlash;
     private boolean lastBackSlash;
     private boolean lastStar;
@@ -34,7 +35,7 @@ public class StripperThread implements Runnable {
     private ArrayList<String> outputFile;
     private File file;
 
-    public StripperThread(File file, Level logLevel) {
+    public StripperThread(File file, Level logLevel, String outputPath) {
         this.file = file;
         setupLogger();
         logger.setLevel(logLevel);
@@ -45,6 +46,7 @@ public class StripperThread implements Runnable {
         currCharLiteral = false;
         inputFile = new ArrayList<>();
         outputFile = new ArrayList<>();
+        this.outputPath = outputPath;
     }
 
     @Override
@@ -68,7 +70,10 @@ public class StripperThread implements Runnable {
         logger.info("Reading input file " + file.getName() + "...");
         try (Stream<String> stream = Files.lines(file.toPath())) {
             inputFile = stream.collect(Collectors.toCollection(ArrayList::new));
-        } catch (IOException | UncheckedIOException e) {
+        } catch (UncheckedIOException e) {
+            logger.severe(ExceptionUtils.getStackTrace(e));
+            throw new Exception(file.getName() + "is not a valid file for processing.");
+        } catch (IOException e) {
             logger.severe(ExceptionUtils.getStackTrace(e));
             throw new Exception("An error occured while reading the input file " + file.getName() + ". Please see log for details.");
         }
@@ -83,9 +88,12 @@ public class StripperThread implements Runnable {
             logger.fine("Char: " + c);
             evaluateChar(c, stringBuilder);
 
-            if (!currLineComment && !currBlockComment && !overrideAppend) {
+            if (currLineComment) {
+                break;
+            } else if (!currBlockComment && !overrideAppend) {
                 stringBuilder.append(c);
             }
+
 
             setCharFlagsFalse();
             parseChar(c);
@@ -163,7 +171,7 @@ public class StripperThread implements Runnable {
             String extension = "." + FilenameUtils.getExtension(file.getName());
             String outputFileName = StringUtils.removeEnd(file.getName(), extension);
             outputFileName = outputFileName + "-out" + extension;
-            File newFile = new File(".\\output\\" + outputFileName);
+            File newFile = new File(outputPath + outputFileName);
             FileUtils.writeLines(newFile, "UTF-8", outputFile, "");
         } catch (IOException e) {
             logger.severe(ExceptionUtils.getStackTrace(e));

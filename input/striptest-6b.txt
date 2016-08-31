@@ -1,0 +1,2 @@
+line with text and comment //comment to be removed
+second line with text and comment //comment to be removed
