@@ -11,6 +11,7 @@ public final class Main {
     private static String logLevel = "info";
     private static String inputPath = ".\\";
     private static String outputPath = ".\\output\\";
+    private static String depth = "0";
 
     private Main() {
     }
@@ -40,7 +41,9 @@ public final class Main {
             outputPath = line.getOptionValue("output", outputPath);
             logLevel = line.getOptionValue('l', logLevel);
             logLevel = line.getOptionValue("loglevel", logLevel);
-            JStripper stripper = new JStripper(inputPath, outputPath, logLevel);
+            depth = line.getOptionValue('d', depth);
+            depth = line.getOptionValue("depth", depth);
+            JStripper stripper = new JStripper(inputPath, outputPath, logLevel, Integer.valueOf(depth));
             stripper.run();
         } catch (ParseException exp) {
             System.out.println("Unexpected exception:" + exp.getMessage());
@@ -53,6 +56,7 @@ public final class Main {
         options.addOption("i", "input", true, "the directory or file to process");
         options.addOption("o", "output", true, "the directory to put processed files in");
         options.addOption("l", "loglevel", true, "the log level to use, valid options are \"info\", \"fine\", and \"severe\"");
+        options.addOption("d", "depth", true, "the number of levels to explore down with -1 being infinite");
         return options;
     }
 }
