@@ -29,7 +29,7 @@ public class JStripperTest {
         if (logs.exists()) {
             FileUtils.deleteDirectory(logs);
         }
-        JStripper stripper = new JStripper(".\\input\\", ".\\output\\", "fine");
+        JStripper stripper = new JStripper(".\\input\\", ".\\output\\", "fine", -1);
         ArrayList<File> files = stripper.run();
         for (File inputFile : files) {
             if (inputFile.getName().endsWith(".txt")) {

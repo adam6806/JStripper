@@ -1,6 +1,7 @@
 package com.github.adam6806.jstripper;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,6 +24,8 @@ public class JStripper {
     private final Level level;
     private final String inputFile;
     private final String outputPath;
+    private final File outputFile;
+    private int depth;
     private Logger logger;
     private ArrayList<File> inputFiles;
 
@@ -31,7 +34,8 @@ public class JStripper {
      * @param outputPath Output path to write all stripped files to
      * @param logLevel   Log level to use for logger
      */
-    public JStripper(String inputFile, String outputPath, String logLevel) {
+    public JStripper(String inputFile, String outputPath, String logLevel, int depth) {
+        inputFiles = new ArrayList<>();
         switch (StringUtils.lowerCase(logLevel)) {
             case "severe":
                 level = Level.SEVERE;
@@ -46,6 +50,8 @@ public class JStripper {
         logger.setLevel(level);
         this.inputFile = inputFile;
         this.outputPath = outputPath;
+        this.depth = depth + 1;
+        outputFile = new File(outputPath);
     }
 
     /**
@@ -54,14 +60,9 @@ public class JStripper {
     public final ArrayList<File> run() {
         System.out.println("Preparing to strip...");
         long startTime = System.currentTimeMillis();
-        getFiles(inputFile);
-        System.out.println("Stripping " + inputFiles.size() + " files...");
         ExecutorService executor = Executors.newCachedThreadPool();
-        for (File file : inputFiles) {
-            logger.info("Starting thread for " + file.getName());
-            StripperThread thread = new StripperThread(file, level, outputPath);
-            executor.execute(thread);
-        }
+        System.out.println("Stripping files...");
+        startThreads(inputFile, outputPath, depth, executor);
         executor.shutdown();
         // Wait until all threads are finish
         long waitTime = startTime;
@@ -78,21 +79,36 @@ public class JStripper {
         return inputFiles;
     }
 
-    private void getFiles(String inputFile) {
+    private void startThreads(String inputFile, String destPath, int reqDepth, ExecutorService executor) {
+        reqDepth--;
         logger.info("Getting files in " + inputFile + " for processing.");
-        inputFiles = new ArrayList<>();
         File inputFileObj = new File(inputFile);
         if (inputFileObj.isDirectory()) {
             File[] listOfFiles = inputFileObj.listFiles();
             if (listOfFiles != null) {
                 for (File file : listOfFiles) {
                     if (file.isFile()) {
-                        inputFiles.add(file);
+                        logger.info("Starting thread for " + file.getName());
+                        StripperThread thread = new StripperThread(file, level, destPath);
+                        executor.execute(thread);
+                    } else try {
+                        if (reqDepth != 0 && !file.getCanonicalPath().equals(outputFile.getCanonicalPath())) {
+                            File dest = new File(destPath + file.getName());
+                            if (!dest.exists()) {
+                                dest.mkdir();
+                            }
+                            startThreads(file.getPath(), dest.getPath() + "\\", reqDepth, executor);
+                        }
+                    } catch (IOException e) {
+                        logger.severe(ExceptionUtils.getStackTrace(e));
+                        System.out.println("An error occurred copying folder structure for " + destPath);
                     }
                 }
             }
         } else {
-            inputFiles.add(inputFileObj);
+            logger.info("Starting thread for " + inputFileObj.getName());
+            StripperThread thread = new StripperThread(inputFileObj, level, destPath);
+            executor.execute(thread);
         }
     }
 
