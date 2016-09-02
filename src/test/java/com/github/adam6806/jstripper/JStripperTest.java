@@ -34,10 +34,10 @@ public class JStripperTest {
         for (File inputFile : files) {
             if (inputFile.getName().endsWith(".txt")) {
                 String outputFileName = inputFile.getName();
-                File outputFile = new File(".\\output\\" + outputFileName);
+                File outputFile = new File(inputFile.getParentFile().getPath().replace("input", "output") + "\\" + outputFileName);
                 String verifiedOutputFileName = inputFile.getName().replace("in", "out");
                 File verifiedOutputFile = new File(".\\verifiedoutput\\" + verifiedOutputFileName);
-                boolean areEqual = FileUtils.contentEquals(verifiedOutputFile, outputFile);
+                boolean areEqual = FileUtils.contentEqualsIgnoreEOL(verifiedOutputFile, outputFile, "UTF-8");
                 collector.checkThat("Output file for " + outputFileName + " did not match for verified output file " + verifiedOutputFileName, areEqual, equalTo(true));
             }
         }

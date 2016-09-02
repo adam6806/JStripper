@@ -1,0 +1,45 @@
+public class ArrayListAssignmentBdernell
+{
+	public static void addCharacter(Vector<String> characterList)
+	{
+	   Scanner local = new Scanner(System.in);
+		boolean cont = true;
+		while(cont)
+		{
+		String answer;
+		System.out.println("Please enter the name of the character you wish to add to the list.");
+		String name = local.nextLine();
+		characterList.insertElementAt(name, 0);
+		System.out.println("Here is the new list of characters: " + characterList);
+		System.out.println("Want to add more to the list (Y/N)?" + "\n");
+		answer = local.nextLine();
+		if(answer.charAt(0) == 'N'|| answer.charAt(0) == 'n' )
+		{
+			cont = false;
+		}
+		}
+		return;
+	}
+	public static void deleteCharacter(Vector<String> characterList)
+	{
+		Scanner local = new Scanner(System.in);
+		boolean cont = true;
+		while(cont)
+		{
+		String answer;
+		System.out.println("Please enter the name of the character you wish to DELETE from the list.");
+		String name = local.nextLine();
+		if(!characterList.removeElement(name))
+			{
+				System.out.println(name + " is not in the list");
+			}
+		System.out.println("Here is the new list of characters: " + characterList);
+		System.out.println("Want to delete more from the list (Y/N)?" + "\n");
+		answer = local.nextLine();
+		if(answer.charAt(0) == 'N' || answer.charAt(0) == 'n')
+		{
+			cont = false;
+		}
+		}
+		return;
+	}

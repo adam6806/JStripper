@@ -1,0 +1,4 @@
+		String line = "This is not a blank line";
+int x = line + 4 + cat;
+String Perun = "The next line is blank but should not be removed as it is part of this String
+";

@@ -1,0 +1,49 @@
+/*
+*Test Number 12
+* multiple block comments,
+* some on one line,
+* some enclosing many lines,
+* some on lines with text, 
+* plus lines of plain text (no blank lines, no line comments)
+*/
+public class ArrayExamples
+{	public static void main(String[] args)/* block comment on one line */
+	{	int[] list = {1, 2, 3, 4, 1, 2, 3};
+		findAndPrintPairs(list, 5);
+		bubblesort(list);
+		showList(list);
+		list = new int[]{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+		bubblesort(list);
+		showList(list);
+		list = new int[]{11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, -1, -2};
+		bubblesort(list);
+		showList(list);
+		list = new int[]{1};
+		bubblesort(list);
+		showList(list);
+	}
+	public static int findMin(int[] list)
+	{	assert list != null && list.length > 0 : "failed precondition";
+		int indexOfMin = 0;
+		for(int i = 1; i < list.length; i++)
+		{	if(list[i] < list[indexOfMin])
+			{	indexOfMin = i;
+			}
+		}
+		return indexOfMin;
+	}
+	/*
+	 *pre: list != null, newSize >= 0
+	 *post: nothing. the method does not succeed it resizing the
+	 * argument
+	 */
+	public static void badResize(int[] list, int newSize)
+	{	assert list != null && newSize >= 0 : "failed precondition";
+		int[] temp = new int[newSize];
+		int limit = Math.min(list.length, newSize);
+		for(int i = 0; i < limit; i++)
+		{	temp[i] = list[i];
+		}
+		list = temp;
+	}
+}

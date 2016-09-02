@@ -26,6 +26,7 @@ public class JStripper {
     private final String outputPath;
     private final File outputFile;
     private int depth;
+    private int fileCount;
     private Logger logger;
     private ArrayList<File> inputFiles;
 
@@ -52,6 +53,7 @@ public class JStripper {
         this.outputPath = outputPath;
         this.depth = depth + 1;
         outputFile = new File(outputPath);
+        fileCount = 0;
     }
 
     /**
@@ -75,7 +77,7 @@ public class JStripper {
         }
         long stopTime = System.currentTimeMillis();
         logger.info("All threads complete!");
-        System.out.println("Stripping complete! Stripped files are at " + outputPath + " See logs directory for details. Elapsed time: " + (stopTime - startTime) / MS_CONVERSION + " seconds");
+        System.out.println("Stripping complete! Processed " + fileCount + " files. Stripped files are at " + outputPath + " See logs directory for details. Elapsed time: " + (stopTime - startTime) / MS_CONVERSION + " seconds");
         return inputFiles;
     }
 
@@ -91,6 +93,8 @@ public class JStripper {
                         logger.info("Starting thread for " + file.getName());
                         StripperThread thread = new StripperThread(file, level, destPath);
                         executor.execute(thread);
+                        inputFiles.add(file);
+                        fileCount++;
                     } else try {
                         if (reqDepth != 0 && !file.getCanonicalPath().equals(outputFile.getCanonicalPath())) {
                             File dest = new File(destPath + file.getName());
@@ -109,6 +113,8 @@ public class JStripper {
             logger.info("Starting thread for " + inputFileObj.getName());
             StripperThread thread = new StripperThread(inputFileObj, level, destPath);
             executor.execute(thread);
+            inputFiles.add(inputFileObj);
+            fileCount++;
         }
     }
 

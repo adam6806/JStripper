@@ -1,0 +1,3 @@
+The above line should be removed.
+This is not a comment and should not have been removed.*/
+'// /* None of this is a comment. The single quote should be treated as a string literal */'

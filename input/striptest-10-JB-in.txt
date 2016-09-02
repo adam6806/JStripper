@@ -1,0 +1,7 @@
+     
+Text with an empty line above.
+
+            
+More text with empty lines above.
+
+    Text with whitespace before, not to be confused with an empty line.

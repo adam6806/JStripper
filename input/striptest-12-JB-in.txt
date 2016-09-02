@@ -1,0 +1,7 @@
+/* Block comment on a single line. */
+/* Block comment 
+that spans
+across several
+lines.*/
+A line of plain text.
+/* Block comment on a single line. */

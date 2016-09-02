@@ -1,0 +1,79 @@
+/*
+* Test Case 13 - Ultimate Code Stripper Test
+* This is some sample code I found from previous Java I've worked on and thought it could form a nice test file.
+* This will contain all kinds of blank lines, comments, and lines of text
+* Some of these cases will be single while others mixed
+*/
+
+/*
+
+/
+
+
+
+                                                                            //some lines with white space above
+
+//blank line check
+
+
+
+  @Override
+  public void keyPressed(KeyEvent ke) {  //line with leading tab
+      if(ke.getKeyCode() == KeyEvent.VK_LEFT){
+        redbird1.moveLeft();
+        this.repaint();
+        System.out.println("The bird moved left on the screen. "+ redbird1.getBirdMovement() + "px");
+        // Comment on its own line
+      }
+      if(ke.getKeyCode() == KeyEvent.VK_RIGHT){
+        redbird1.moveRight();
+        this.repaint(); //end of line comment
+
+      }
+      /* Block comment on its own line */
+
+  }
+
+  /
+
+  Some normal text.
+
+                    //Line with tabs and     spaces with a line comment
+
+     /*  Block comment with //line comments //line comments  //line comments  in it  */
+
+     //Line comment with a /* block comment */ inside
+
+     /* Block comment inside a block comment /* 2nd Block Comment */ */
+
+     //line comment and another line comment inside //line comment
+
+  @Override
+  public void keyReleased(KeyEvent ke) {   /* Block comment on line with text */
+
+    //if statement that has the music loop while at the title screen
+    //if the spacebar is pressed then the game starts playing
+     if(mode == TITLE && ke.getKeyCode() == KeyEvent.VK_SPACE){
+              mode = GAME;
+              music.setLooping(true);
+              music.play();
+     }
+
+     //blocked out if statement below.
+
+     /*if(mode == WIN && ke.getKeyCode() == KeyEvent.VK_SPACE){
+              mode = GAME;
+              music.setLooping(true);
+              music.play();
+     }*/
+
+
+     if((mode == GAME)&& (ke.getKeyChar() == 'p'|| ke.getKeyChar() == 'P')){
+              if(isPaused) unpause(); //if game already paused, key unpauses game
+              else pause(); //otherwise pause the game
+     }
+     if((mode == TITLE || mode == GAME || mode == WIN)&& (ke.getKeyChar() == 'q'|| ke.getKeyChar() == 'Q')){
+         System.exit(0); //line of code that quits the game while playing or in title screen
+     }
+
+  }
