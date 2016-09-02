@@ -8,5 +8,5 @@ System.out.println("str1: "+ str);
 String str3 = "Solution yields: " + pi + "rounded to 2 decimal places";
 System.out.println("str3: "+ str3);
 System.out.println("This test case tests multiple line comments. Some end of line. Some line comments mixed in with declarations.
-Also looks for just simple line comments too.");
+ Also looks for just simple line comments too.");
 }
