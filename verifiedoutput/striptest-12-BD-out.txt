@@ -3,7 +3,7 @@ public class ArrayListAssignmentBdernell
 	public static void addCharacter(Vector<String> characterList)
 	{
 	   Scanner local = new Scanner(System.in);
-		boolean cont = true;
+		boolean cont = true;  
 		while(cont)
 		{
 		String answer;
@@ -13,7 +13,7 @@ public class ArrayListAssignmentBdernell
 		System.out.println("Here is the new list of characters: " + characterList);
 		System.out.println("Want to add more to the list (Y/N)?" + "\n");
 		answer = local.nextLine();
-		if(answer.charAt(0) == 'N'|| answer.charAt(0) == 'n' )
+		if(answer.charAt(0) == 'N'|| answer.charAt(0) == 'n' ) 
 		{
 			cont = false;
 		}
@@ -23,7 +23,7 @@ public class ArrayListAssignmentBdernell
 	public static void deleteCharacter(Vector<String> characterList)
 	{
 		Scanner local = new Scanner(System.in);
-		boolean cont = true;
+		boolean cont = true;  
 		while(cont)
 		{
 		String answer;

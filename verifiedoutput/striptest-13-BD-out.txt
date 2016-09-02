@@ -1,28 +1,19 @@
-  @Override
-  public void keyPressed(KeyEvent ke) {
-      if(ke.getKeyCode() == KeyEvent.VK_LEFT){
-        redbird1.moveLeft();
-        this.repaint();
-        System.out.println("The bird moved left on the screen. "+ redbird1.getBirdMovement() + "px");
-      }
-      if(ke.getKeyCode() == KeyEvent.VK_RIGHT){
-        redbird1.moveRight();
-        this.repaint();
-
-      }
   }
+  /
+  Some normal text.
+ */
   @Override
-  public void keyReleased(KeyEvent ke) {
+  public void keyReleased(KeyEvent ke) {   
      if(mode == TITLE && ke.getKeyCode() == KeyEvent.VK_SPACE){
               mode = GAME;
               music.setLooping(true);
               music.play();
      }
      if((mode == GAME)&& (ke.getKeyChar() == 'p'|| ke.getKeyChar() == 'P')){
-              if(isPaused) unpause();
-              else pause();
+              if(isPaused) unpause(); 
+              else pause(); 
      }
      if((mode == TITLE || mode == GAME || mode == WIN)&& (ke.getKeyChar() == 'q'|| ke.getKeyChar() == 'Q')){
-         System.exit(0);
+         System.exit(0); 
      }
   }
