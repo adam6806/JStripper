@@ -36,15 +36,18 @@ public final class Main {
                 String footer = "\nPlease report issues at https://github.com/adam6806/JStripper";
                 formatter.printHelp("JStripper", header, options, footer, true);
                 System.exit(0);
+            } else if (line.getOptions().length == 0 && args.length == 1) {
+                inputPath = args[0];
+            } else {
+                inputPath = line.getOptionValue('i', inputPath);
+                inputPath = line.getOptionValue("input", inputPath);
+                outputPath = line.getOptionValue('o', outputPath);
+                outputPath = line.getOptionValue("output", outputPath);
+                logLevel = line.getOptionValue('l', logLevel);
+                logLevel = line.getOptionValue("loglevel", logLevel);
+                depth = line.getOptionValue('d', depth);
+                depth = line.getOptionValue("depth", depth);
             }
-            inputPath = line.getOptionValue('i', inputPath);
-            inputPath = line.getOptionValue("input", inputPath);
-            outputPath = line.getOptionValue('o', outputPath);
-            outputPath = line.getOptionValue("output", outputPath);
-            logLevel = line.getOptionValue('l', logLevel);
-            logLevel = line.getOptionValue("loglevel", logLevel);
-            depth = line.getOptionValue('d', depth);
-            depth = line.getOptionValue("depth", depth);
             JStripper stripper = new JStripper(inputPath, outputPath, logLevel, Integer.valueOf(depth));
             stripper.run();
         } catch (ParseException exp) {
@@ -57,7 +60,6 @@ public final class Main {
         options.addOption(Option.builder("h")
                 .longOpt("help")
                 .hasArg(false)
-                .required(false)
                 .desc("prints this message")
                 .build());
         options.addOption(Option.builder("i")
@@ -71,21 +73,21 @@ public final class Main {
                 .longOpt("output")
                 .hasArg()
                 .argName("Path")
-                .optionalArg(true)
+                .optionalArg(false)
                 .desc("the directory to put processed files in")
                 .build());
         options.addOption(Option.builder("l")
                 .longOpt("loglevel")
                 .hasArg()
                 .argName("Level")
-                .optionalArg(true)
+                .optionalArg(false)
                 .desc("the log level to use, valid options are \"info\", \"fine\", and \"severe\"")
                 .build());
         options.addOption(Option.builder("d")
                 .longOpt("depth")
                 .hasArg()
                 .argName("Integer")
-                .optionalArg(true)
+                .optionalArg(false)
                 .desc("the number of levels to explore down with -1 being infinite")
                 .build());
         return options;
